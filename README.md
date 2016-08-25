@@ -4,7 +4,7 @@ Lively Kernel tidbits I've picked up from conversation, code reviews, and raw ex
 
 
 ## General Questions
-***
+
 ### What are Lively's guiding principles?
 
 Courtesy of RK:
@@ -26,7 +26,7 @@ The idea behind this is to encapsulate components and entire applications into o
 3. Finding presentations for control flow and dynamic relationships in programs and their execution. One element of this is certainly how "debugging" works in Smalltalk (e.g. https://www.youtube.com/watch?v=1kuoS796vNw) which leads to a process during which users don't have to play "computer" in their heads and which gives direct access to the runtime state during program execution. In Lively we still haven't satisfying support for that and one of the major goals for us is to finally change this. The existing [debugger work](http://lively-web.org/projects.html#show=debugging), to which Chris who worked with us before contributed, is part of the solution we have in mind.
 
 ## The Object Model
-***
+
 ### What flavor(s) of object orientation does Lively support?
 
 Lively's core is built around a hierarchy of classes and instances, inspired by the class system of Prototype.js. Individual objects may be augmented with new or modified properties using  `Object.extend` (see below). And of course, it's all Javascript under the hood, so custom solutions or custom object models can be built within Lively worlds.
@@ -61,7 +61,7 @@ Object.subclass('ClassA', {
 			    
  Object.subclass('ClassB', {	
 			      		  m2: function() { return 22 },
-						  m3: function() { return 3 }
+				          m3: function() { return 3 }
 				});
 
 ClassA.subclass('ClassC', ClassB.prototype);
@@ -78,13 +78,18 @@ x instanceof ClassB // false
 
 Modules are used to identify Javascript and other source files. Consider an example:
 
+```javascript
 module('lively.ide').requires('lively.Tools', 'lively.Ometa').toRun(function() {
 // Code depending on lively.Tools and lively.Ometa
 }) // end of module
+```
 
 This definition does two things:
 * Define the module 'lively.ide'. This module can then be required by other parts of the system, e.g.,:
+
+```javascript
 require('lively.ide').toRun(function() { new lively.ide.SystemBrowser().open() })
+```
 
 require() will check if the 'lively.ide' module is already loaded. If not, the module name will be resolved to a URL, e.g., {Config.codeBase}/lively/ide.js. This URL will then be used to load lively/ide.js asynchronously.
 Once the file has been loaded, code inside toRun() will be executed.
@@ -92,7 +97,7 @@ Once the file has been loaded, code inside toRun() will be executed.
 * Define the namespace 'lively.ide'. Once the module has been loaded its members are accessible in Javascript (e.g., lively.ide.SystemBrowser).
 
 ## Morphic 
-***
+
 ### How can I override Morph mouse behavior, say, to capture a drag event?
 
 First, make sure that dragging is enabled: morph.enableDragging().
@@ -102,7 +107,7 @@ There are three drag-related handlers:
 * onDrag
 * onDragEnd
 
-```
+```javascript
 morph.addScript(function onDrag(evt) {
     var globalPosition = this.worldPoint(pt(0,0)),
             nowHandAngle = evt.getPosition().subPt(globalPosition).theta(),
@@ -122,14 +127,13 @@ morph.addScript(function onDragStart(evt) {
 Morphs rotate around their origin, which appears as a small red dot in the halo menu, and may not be identical to the morph's centroid. You can move this origin by grabbing the red dot, or by executing `morph.setOrigin(morph.innerBounds().center())`.
 
 
-
 ## The PartsBin
-***
+
 ### How can I open a part programmatically?
 
-
-
-`$world.openPartItem('Triangle', 'PartsBin/Basic');`
+```javascript
+$world.openPartItem('Triangle', 'PartsBin/Basic');
+```
 
 
 ### Is it possible to add parts stored in remote PartsBins to my world?
@@ -140,7 +144,7 @@ All examples assume you're attempting to to a remote PartsBin at http://my-lk-se
 
 * Teach your PartsBinBrowser about a new PartsBin:
 
-    ```
+    ```javascript
     lively.PartsBin.getPartsBinURLs = lively.PartsBin.getPartsBinURLs.wrap(function(proceed) {
         return proceed().concat([new URL("http://my-lk-server:9001/PartsBin/")])
         });
@@ -149,7 +153,7 @@ All examples assume you're attempting to to a remote PartsBin at http://my-lk-se
     ```
 
 * Open a PartsBinBrowser on a remote PartsBin:
-    ```
+    ```javascript
     $world.openPartsBin();
     var pb = $morph("PartsBinBrowser").targetMorph;
     pb.setPartsBinURL(new URL("http://my-lk-server:9001/PartsBin/"));
@@ -157,7 +161,7 @@ All examples assume you're attempting to to a remote PartsBin at http://my-lk-se
      ```
 
 * Programmatically load a remote Part, "Triangle", stored in the "Basic" category, from the remote PartsBin:
-    ```
+    ```javascript
     // Load a "PartsSpace" = a category of another PB
     var ps = lively.PartsBin.partsSpaceWithURL(new URL("http://my-lk-server:9001/PartsBin/Basic")).load()
     // list of items:
@@ -167,7 +171,7 @@ All examples assume you're attempting to to a remote PartsBin at http://my-lk-se
     ```
 
 ## Connecting to the outside world
-***
+
 ### Can I use it to talk to hardware?
 
 Absolutely. You could use a NodeJS subserver to dispatch requests to the OS and return responses. For low-level access to ports on embedded hardware (e.g., a Raspberry Pi), you could also use a library like [PI-GPIO](https://github.com/rakeshpai/pi-gpio].
@@ -203,7 +207,7 @@ default onLoad() method:
 
 Note that some third party libraries load asynchronously, so you may need to add a timeout function to loadLibs() to ensure all libraries load before passing control to the next function in the promise chain:
 
-```
+```javascript
 function loadLibs() {
     var libs =  [
       "//d3js.org/d3.v3.js",
@@ -231,14 +235,12 @@ function loadLibs() {
 ### What's the preferred way to make an ajax call?
 Probably using a WebResource:
 
-```
-
+```javascript
 new URL('http://google.com').asWebResource().beAsync().noProxy().withJSONWhenDone(function(content) {
     console.log(content) });
 ```
 
 ## Workflow
-***
 
 ### Where are my `console.log` messages redirected to?
 
@@ -248,18 +250,21 @@ You can keep an eye on them by keeping an instance of the System Console running
 
 Try `$world.inform`. 
 
-`$world.inform("Unable to retrieve remote resource.")`
+```javascript
+$world.inform("Unable to retrieve remote resource.")
+```
 
 ### Can I accept input with a popup?
 
 Sure. Try `$world.prompt`.
 
-`var response = $world.inform("Enter a city name")`
+```javascript
+var response = $world.inform("Enter a city name")
+```
 
 
 
 ## Deployment
-***
 
 ### Can I use lively in a multitenant environment?
 
@@ -270,11 +275,13 @@ Definitely. This is how lively-web is set up. Common practice is to give each us
 
 Yes, this option (along with many others, can be configured by bin/lk-server.js. To make your lively instance accessible to other users on your local network on port 8080, try the following from the LivelyKernel root directory:
 
-`$ node bin/lk-server.js --host 0.0.0.0 --port 8080`
+```sh
+$ node bin/lk-server.js --host 0.0.0.0 --port 8080
+```
 
 
 ## TODO
-***
+
 ### Can I run a Lively world without persistent storage?
 
 This used to be possible. Can we still do this? If so, what are the constraints?
