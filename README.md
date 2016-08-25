@@ -43,7 +43,7 @@ Properties (including functions) defined using `Object.subclass` apply to the in
 
 ### Does Lively support multiple inheritance?
 
-Not currently. That said, you can copy functions and properties from one class to another (thoughbe advised that $super, instanceof may not work as expected).
+Not currently. That said, you can copy functions and properties from one class to another (though be advised that $super, instanceof may not work as expected).
 ```javascript
 Object.subclass('ClassA', {
 			             m1: function() { return 1},	
