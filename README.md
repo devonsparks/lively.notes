@@ -29,20 +29,11 @@ The idea behind this is to encapsulate components and entire applications into o
 
 ### What flavor(s) of object orientation does Lively support?
 
-Lively's core is built around a hierarchy of classes and instances, inspired by the class system of Prototype.js. Individual objects may be augmented with new or modified properties using  `Object.extend` (see below). And of course, it's all Javascript under the hood, so custom solutions or custom object models can be built within Lively worlds.
+Lively's core is built around a hierarchy of classes and instances, inspired by the class system of Prototype.js. Individual objects may be augmented with new or modified properties using  `Object.extend` (see below). And of course, it's all Javascript under the hood, so custom object models can be built within Lively worlds.
 
 ### Can I still use prototypical inheritance in Lively?
 
 Yes. Objects in Lively can have a class (the constructor attribute of an object points to it) but they can still be changed prototypically. This means that methods/attributes of a specific object can be changed without changing its class.
-
-As an example, say you want to customize the morph menu for a particular morph. Open an Inspector, then evaluate:
-```javascript
-this.morphMenu = function () { 
-    const trigger = function() { alert('menu entry clicked');}
-    return new MenuMorph([['test', trigger]], this); 
-}
-```
-This morph will now have a 'test' menu option that, when clicked, activates an alert box. Siblings of this particular morph (i.e., instances of the same class) will not have this menu option.
 
 This general facility to provides a way to override the behavior of an instance of a class.
 
@@ -110,17 +101,16 @@ There are three drag-related handlers:
 ```javascript
 morph.addScript(function onDrag(evt) {
     var globalPosition = this.worldPoint(pt(0,0)),
-            nowHandAngle = evt.getPosition().subPt(globalPosition).theta(),
-	            newRotation = this.startRotation + (nowHandAngle -
-		    this.startHandAngle);
-		        this.setRotation(newRotation);
-			});
+        nowHandAngle = evt.getPosition().subPt(globalPosition).theta(),
+	newRotation = this.startRotation + (nowHandAngle - this.startHandAngle);
+	this.setRotation(newRotation);
+});
 
 morph.addScript(function onDragStart(evt) {
     var globalPosition = this.worldPoint(pt(0,0));
-        this.startRotation = this.getRotation();
-	    this.startHandAngle = evt.getPosition().subPt(globalPosition).theta();
-	    });
+    this.startRotation = this.getRotation();
+    this.startHandAngle = evt.getPosition().subPt(globalPosition).theta();
+});
 ```
 
 ### Why doesn't my morph rotate about its center?
@@ -147,9 +137,8 @@ All examples assume you're attempting to to a remote PartsBin at http://my-lk-se
     ```javascript
     lively.PartsBin.getPartsBinURLs = lively.PartsBin.getPartsBinURLs.wrap(function(proceed) {
         return proceed().concat([new URL("http://my-lk-server:9001/PartsBin/")])
-        });
-        // 2. Search for parts
-        lively.PartsBin.discoverPartSpaces(function() { /*when done*/});
+    });
+    lively.PartsBin.discoverPartSpaces(function() { /*when done*/});
     ```
 
 * Open a PartsBinBrowser on a remote PartsBin:
@@ -186,7 +175,7 @@ default onLoad() method:
    function onLoad() {
        this.loadLibs()	
            .then(function() { render(); })
-	        .catch(function(err) { $world.inform("load error " + err) });
+	   .catch(function(err) { $world.inform("load error " + err) });
 	}
 
   // load d3 + verious vega libs
@@ -194,15 +183,15 @@ default onLoad() method:
         var libs =  [
 	      "//d3js.org/d3.v3.js",
 	      "//vega.github.io/vega/vega.js",
-		  "//vega.github.io/vega-lite/vega-lite.js",
-			"//vega.github.io/vega-editor/vendor/vega-embed.js"
-		 ];
+	      "//vega.github.io/vega-lite/vega-lite.js",
+	      "//vega.github.io/vega-editor/vendor/vega-embed.js"
+	      ];
 		 
-		return lively.lang.promise.chain(libs.map((url, i) =>
-			    function() { return new Promise((resolve, reject) => JSLoader.loadJs(url, resolve)); }))
-					              .then(function() { return show('Loaded!'); })
-						          .catch(function(err) { return $world.logError('Load failed: ' + err); });
-	 }
+	      return lively.lang.promise.chain(libs.map((url, i) =>
+			 function() { return new Promise((resolve, reject) => JSLoader.loadJs(url, resolve)); }))
+					         .then(function() { return show('Loaded!'); })
+						 .catch(function(err) { return $world.logError('Load failed: ' + err); });
+    }
 ```
 
 Note that some third party libraries load asynchronously, so you may need to add a timeout function to loadLibs() to ensure all libraries load before passing control to the next function in the promise chain:
@@ -256,12 +245,26 @@ $world.inform("Unable to retrieve remote resource.")
 
 ### Can I accept input with a popup?
 
-Sure. Try `$world.prompt`.
+Try `$world.prompt`.
 
 ```javascript
-var response = $world.inform("Enter a city name")
+var response = $world.prompt("Enter a city name")
 ```
 
+### Can you recommend any useful prototyping patterns?
+
+While I make no claim these techniques are the most effective way to prototype tools inside Lively, I have found them helpful:
+
+* If you don't know exactly how your morph should behave, or what protocol it should support, start with a Rectangle morph. Use the Object Edtitor
+to attach methods to it. Use the Inspector to send messages to the morph. Use this mechanism to refine method signatures until the morph behaves as you expect.
+Save it in its own world so you have a dedicated workspace as you develop it, or publish to the PartsBin with the caveat that it's not feature complete.
+
+* Create `aboutMe()` scripts that take no arguments and return docstrings for parts.
+
+* Place code to restore a morph to its initial state in a method or script called "reset". This will automatically add a "Reset" item to the morph's context menu.
+
+* If you override a morph's `onLoad()` method, you can make a call to `this.reset()` to ensure newly created morphs (say, pulled from the PartsBin) appear in the world 
+in their 'default' state.
 
 
 ## Deployment
@@ -273,7 +276,7 @@ Definitely. This is how lively-web is set up. Common practice is to give each us
 
 ### Can I change the server configuration (host, port) Lively runs on?
 
-Yes, this option (along with many others, can be configured by bin/lk-server.js. To make your lively instance accessible to other users on your local network on port 8080, try the following from the LivelyKernel root directory:
+es, this option (along with many others) can be configured by bin/lk-server.js. To make your lively instance accessible to other users on your local network on port 8080, try the following from the LivelyKernel root directory:
 
 ```sh
 $ node bin/lk-server.js --host 0.0.0.0 --port 8080
@@ -286,6 +289,6 @@ $ node bin/lk-server.js --host 0.0.0.0 --port 8080
 
 This used to be possible. Can we still do this? If so, what are the constraints?
 
-### Can you recommend any useful patterns?
+### What's the difference between `$morph('aMorphName')` and `this.get('aMorphName')`?
 
 ### How can I use HTTPS?
