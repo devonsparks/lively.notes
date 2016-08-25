@@ -23,7 +23,7 @@ The idea behind this is to encapsulate components and entire applications into o
 
 2. Being able to "lift" available data sources, services, and non-Lively systems into Lively itself to program with, combine them, represent them as concrete objects. There are several facets to this, besides the integration of "web-stuff" such as JavaScript libraries and HTTP services we also make use to control operating system processes via nodejs and provide a remote messaging mechanism called Lively-2-Lively that automatically connects Lively worlds and optionally other systems that implement the [L2L protocol](http://lively-web.org/users/robertkrahn/2013-08-17_Lively2Lively.html).
 
-3. Finding presentations for control flow and dynamic relationships in programs and their execution. One element of this is certainly how "debugging" works in Smalltalk (e.g. https://www.youtube.com/watch?v=1kuoS796vNw) which leads to a process during which users don't have to play "computer" in their heads and which gives direct access to the runtime state during program execution. In Lively we still haven't satisfying support for that and one of the major goals for us is to finally change this. The existing [debugger work](http://lively-web.org/projects.html#show=debugging), to which Chris who worked with us before contributed, is part of the solution we have in mind.
+3. Finding presentations for control flow and dynamic relationships in programs and their execution. One element of this is certainly [how "debugging" works in Smalltalk](https://www.youtube.com/watch?v=1kuoS796vNw) which leads to a process during which users don't have to play "computer" in their heads and which gives direct access to the runtime state during program execution. In Lively we still haven't satisfying support for that and one of the major goals for us is to finally change this. The existing [debugger work](http://lively-web.org/projects.html#show=debugging), to which Chris who worked with us before contributed, is part of the solution we have in mind.
 
 ## The Object Model
 
@@ -174,7 +174,7 @@ All examples assume you're attempting to to a remote PartsBin at http://my-lk-se
 
 ### Can I use it to talk to hardware?
 
-Absolutely. You could use a NodeJS subserver to dispatch requests to the OS and return responses. For low-level access to ports on embedded hardware (e.g., a Raspberry Pi), you could also use a library like [PI-GPIO](https://github.com/rakeshpai/pi-gpio].
+Absolutely. You could use a NodeJS subserver to dispatch requests to the OS and return responses. For low-level access to ports on embedded hardware (e.g., a Raspberry Pi), you could also use a library like [PI-GPIO](https://github.com/rakeshpai/pi-gpio).
 
 ### How can I embed third-party HTML, possibly with external Javascript libraries?
 
