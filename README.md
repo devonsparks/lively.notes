@@ -91,7 +91,7 @@ Once the file has been loaded, code inside toRun() will be executed.
 
 ### How can I override Morph mouse behavior, say, to capture a drag event?
 
-First, make sure that dragging is enabled: morph.enableDragging().
+First, make sure that dragging is enabled: `morph.enableDragging()`.
 
 There are three drag-related handlers:
 * onDragStart
@@ -128,8 +128,7 @@ $world.openPartItem('Triangle', 'PartsBin/Basic');
 
 ### Is it possible to add parts stored in remote PartsBins to my world?
 
-You can teach your PartsBinBrowser about remote PartsBins dynamically. A few options:
-All examples assume you're attempting to to a remote PartsBin at http://my-lk-server:9001/PartsBin/ and that your firewall doesn't block traffic on port 9001.
+Thankfully, you have a few options. All examples assume you're attempting to to a remote PartsBin at http://my-lk-server:9001/PartsBin/ and that your firewall doesn't block traffic on port 9001.
 
 
 * Teach your PartsBinBrowser about a new PartsBin:
