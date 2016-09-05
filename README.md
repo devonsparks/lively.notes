@@ -250,6 +250,16 @@ Try `$world.prompt`.
 var response = $world.prompt("Enter a city name")
 ```
 
+### What's the best way to define a morph's style when working in the Code Browser?
+
+Try overriding the morph's `style` property (usually found in the `settings` method category). As an example, to set a morph's background fill color to red, try:
+```
+style: {
+       fill: Color.red,
+       }
+```
+
+
 ### Can you recommend any useful prototyping patterns?
 
 While I make no claim these techniques are the most effective way to prototype tools inside Lively, I have found them helpful:
@@ -275,7 +285,7 @@ Definitely. This is how lively-web is set up. Common practice is to give each us
 
 ### Can I change the server configuration (host, port) Lively runs on?
 
-es, this option (along with many others) can be configured by bin/lk-server.js. To make your lively instance accessible to other users on your local network on port 8080, try the following from the LivelyKernel root directory:
+This option (along with many others) can be configured by bin/lk-server.js. To make your lively instance accessible to other users on your local network on port 8080, try the following from the LivelyKernel root directory:
 
 ```sh
 $ node bin/lk-server.js --host 0.0.0.0 --port 8080
